@@ -17,17 +17,30 @@
 这会检查已安装依赖是否冲突。本次安装已验证扫描运算的输出及梯度，以及随机初始化的 Mamba YOLO-T 前向和反向传播。
 随机权重验证仅证明代码执行正常，不代表有可用的检测精度。一次性验证脚本和日志已清理。
 
-## 训练
+## 在 VisDrone 上从零训练
 
-先下载数据集并准备对应的 YOLO 标注和 data.yaml。数据文件中建议使用绝对路径。
-确认小尺寸和小批量能运行后，再根据内存情况提高输入尺寸。
+训练入口默认使用 `ultralytics/cfg/datasets/VisDrone.yaml`，包含 VisDrone2019-DET 的 10 个类别。
+模型从结构 YAML 创建，不加载 COCO 预训练权重。检测头由训练器根据数据集自动调整为 10 类，通用模型结构文件中的 `nc: 80` 不需要手动修改。
+默认输入 256×256、batch=1、workers=0，优先使用 GPU；默认训练轮数仍为 300，可通过 `--epochs` 修改。
+
+数据默认放在 `C:/Users/111/Desktop/本科项目/Mamba-YOLO/datasets/VisDrone`。
+首次运行训练时，如果缺少验证集图片，会自动下载训练集和验证集并转换 YOLO 标签；不会下载 COCO 或竞赛测试集。
+如果使用已有数据，请修改 VisDrone.yaml 的 `path`，并确保 train/val 子目录下都有 images 和转换后的 labels。只有图片目录已存在时，框架不会自动执行转换脚本。
+
+先运行一轮检查真实数据的耗时和显存：
 
 ```powershell
-& 'C:\Users\111\AppData\Local\Programs\Python\Python311\python.exe' mbyolo_train.py --task train --data '你的数据集配置.yaml' --device 0 --batch_size 1 --workers 0 --imgsz 128 --epochs 1
+& 'C:\Users\111\AppData\Local\Programs\Python\Python311\python.exe' mbyolo_train.py --epochs 1
 ```
 
-128 是初次排查环境用的输入尺寸，不是建议的小目标检测研究配置。正式训练需选择适合实验的数据与尺寸。
-原项目默认 COCO 数据尚未下载，不能直接运行默认训练命令。
+确认数据、显存和损失正常后，例如训练 100 轮：
+
+```powershell
+& 'C:\Users\111\AppData\Local\Programs\Python\Python311\python.exe' mbyolo_train.py --epochs 100
+```
+
+结果保存在 `output_dir/visdrone/mambayolo_t_visdrone*`，训练完成后查看其中的 `weights/best.pt`。
+256 是本机兼容实现的起步尺寸，不是最终小目标实验效果的保证；提高分辨率前需重新测试显存。
 项目附带的 `yolov8n.pt` 也不是 Mamba YOLO 的训练权重。
 
 ## 在另一台机器重建环境

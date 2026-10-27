@@ -2,13 +2,11 @@
 # VisDrone2019-DET dataset https://github.com/VisDrone/VisDrone-Dataset by Tianjin University
 # Documentation: https://docs.ultralytics.com/datasets/detect/visdrone/
 # Example usage: yolo train data=VisDrone.yaml
-# parent
-# ├── ultralytics
-# └── datasets
-#     └── VisDrone  ← downloads here (2.3 GB)
+# Local Windows dataset root. Change path if you store the dataset elsewhere.
+# Missing train/val data is downloaded and converted on the first training run.
 
 # Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
-path: /mnt/datasets/VisDrone2019 # dataset root dir
+path: C:/Users/111/Desktop/本科项目/Mamba-YOLO/datasets/VisDrone # dataset root dir
 train: VisDrone2019-DET-train/images # train images (relative to 'path')  6471 images
 val: VisDrone2019-DET-val/images # val images (relative to 'path')  548 images
 test: VisDrone2019-DET-test-dev/images # test images (optional)  1610 images
@@ -28,7 +26,6 @@ names:
 
 # Download script/URL (optional) ---------------------------------------------------------------------------------------
 download: |
-  import os
   from pathlib import Path
 
   from ultralytics.utils.downloads import download
@@ -46,27 +43,28 @@ download: |
       (dir / 'labels').mkdir(parents=True, exist_ok=True)  # make labels directory
       pbar = tqdm((dir / 'annotations').glob('*.txt'), desc=f'Converting {dir}')
       for f in pbar:
-          img_size = Image.open((dir / 'images' / f.name).with_suffix('.jpg')).size
+          with Image.open((dir / 'images' / f.name).with_suffix('.jpg')) as image:
+              img_size = image.size
           lines = []
           with open(f, 'r') as file:  # read annotation.txt
-              for row in [x.split(',') for x in file.read().strip().splitlines()]:
-                  if row[4] == '0':  # VisDrone 'ignored regions' class 0
+              for row in [x.split(',') for x in file.read().splitlines() if x.strip()]:
+                  category = int(row[5])
+                  if int(row[4]) == 0 or not 1 <= category <= 10:
+                      # Skip ignored regions and category 11 (others).
                       continue
-                  cls = int(row[5]) - 1
+                  cls = category - 1
                   box = convert_box(img_size, tuple(map(int, row[:4])))
                   lines.append(f"{cls} {' '.join(f'{x:.6f}' for x in box)}\n")
-                  with open(str(f).replace(f'{os.sep}annotations{os.sep}', f'{os.sep}labels{os.sep}'), 'w') as fl:
-                      fl.writelines(lines)  # write label.txt
+          # Write once per image, including empty labels for background images.
+          (dir / 'labels' / f.name).write_text(''.join(lines), encoding='utf-8')
 
 
   # Download
   dir = Path(yaml['path'])  # dataset root dir
   urls = ['https://github.com/ultralytics/yolov5/releases/download/v1.0/VisDrone2019-DET-train.zip',
-          'https://github.com/ultralytics/yolov5/releases/download/v1.0/VisDrone2019-DET-val.zip',
-          'https://github.com/ultralytics/yolov5/releases/download/v1.0/VisDrone2019-DET-test-dev.zip',
-          'https://github.com/ultralytics/yolov5/releases/download/v1.0/VisDrone2019-DET-test-challenge.zip']
-  download(urls, dir=dir, curl=True, threads=4)
+          'https://github.com/ultralytics/yolov5/releases/download/v1.0/VisDrone2019-DET-val.zip']
+  download(urls, dir=dir, threads=2, delete=True)  # remove archives after extraction
 
   # Convert
-  for d in 'VisDrone2019-DET-train', 'VisDrone2019-DET-val', 'VisDrone2019-DET-test-dev':
+  for d in 'VisDrone2019-DET-train', 'VisDrone2019-DET-val':
       visdrone2yolo(dir / d)  # convert VisDrone annotations to YOLO labels
