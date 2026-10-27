@@ -1,0 +1,25 @@
+# Windows compatibility environment, Python 3.11.5.
+# Install torch/torchvision/torchaudio from the CUDA 12.1 index first (see RUN_WINDOWS.md).
+-c constraints-py311.txt
+matplotlib<3.10
+opencv-python==4.10.0.84
+numpy==1.26.4
+pillow
+pyyaml
+requests
+scipy
+tqdm
+psutil
+py-cpuinfo
+pandas<3
+seaborn
+timm==0.9.16
+huggingface-hub==0.23.4
+safetensors==0.4.3
+einops
+ultralytics-thop==2.0.9
+packaging
+ninja
+wheel
+setuptools<81
+pycocotools
