@@ -1,0 +1,91 @@
+# Local datasets only. Keep ultralytics/data and cfg/datasets source files.
+/datasets/
+/Mamba-YOLO/datasets/
+
+# Training, validation, prediction and export output
+/output_dir/
+/runs/
+/exports/
+/Mamba-YOLO/output_dir/
+/Mamba-YOLO/runs/
+/Mamba-YOLO/exports/
+wandb/
+mlruns/
+events.out.tfevents.*
+*.log
+
+# Model checkpoints and exported models
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.ort
+*.engine
+*.tflite
+*.mlmodel
+*.mlpackage/
+*.mlmodelc/
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cache
+.cache/
+.venv/
+venv/
+env/
+ENV/
+__pypackages__/
+
+# Build output and compiled extensions (keep C++/CUDA sources)
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+*.whl
+*.so
+*.pyd
+*.dll
+*.dylib
+*.o
+*.obj
+*.a
+*.lib
+*.exe
+
+# Download archives and temporary files
+.setup/
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+*.partial
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# Machine-specific settings and secrets
+.env
+.env.*
+!.env.example
+!.env.template
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Existing tracked files are not removed by .gitignore.
