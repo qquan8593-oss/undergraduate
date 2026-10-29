@@ -167,3 +167,6 @@ cython_debug/
 
 # Local dependency installers and download cache
 .setup/
+
+# Small demonstration checkpoint shipped for portable inference.
+!weights/visdrone_last.pt

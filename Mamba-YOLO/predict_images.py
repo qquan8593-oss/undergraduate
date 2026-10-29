@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True, help='Image path or image directory')
-    parser.add_argument('--weights', default=str(Path.home() / 'Desktop/runs/visdrone/mbyolo_tiny_visdrone3/weights/last.pt'))
+    parser.add_argument('--weights', default=str(ROOT / 'weights/visdrone_last.pt'))
     parser.add_argument('--imgsz', type=int, default=256)
     parser.add_argument('--conf', type=float, default=0.25)
     parser.add_argument('--iou', type=float, default=0.7)

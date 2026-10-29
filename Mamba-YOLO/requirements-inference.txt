@@ -1,0 +1,19 @@
+# Python 3.11; install torch 2.3.0 and torchvision 0.18.0 first (see INFERENCE.md).
+numpy==1.26.4
+opencv-python==4.10.0.84
+matplotlib<3.10
+pillow
+pyyaml
+requests
+scipy
+tqdm
+psutil
+py-cpuinfo
+pandas<3
+seaborn
+timm==0.9.16
+einops
+ultralytics-thop==2.0.9
+dill==0.4.1
+packaging
+setuptools<81

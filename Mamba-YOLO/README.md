@@ -1,6 +1,9 @@
 # [AAAI2025] Mamba YOLO: A Simple Baseline for Object Detection with State Space Model
 
 Windows / Python 3.11.5 compatibility setup: see [RUN_WINDOWS.md](RUN_WINDOWS.md).
+
+**图片预测快速开始（含演示权重，无需下载训练集）：[INFERENCE.md](INFERENCE.md)。**
+
 Zeyu Wang, Chen Li, Huiying Xu, Xinzhong Zhu, Hongbo Li
 
 
